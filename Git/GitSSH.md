@@ -46,5 +46,8 @@ ssh-add ~/.ssh/ 你的名字
 ### 3、添加你的 SSH key 到 github上面去
 1、拷贝 id_rsa.pub 文件的内容 到 git ssh key 中
 
+### 4、输入时需要密码
+
+1、clone时为https时需要修改为ssh模式
  
 
