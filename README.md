@@ -7,4 +7,4 @@
 
 ## Git
 
-- [ Git SSH ] (./Git/GitSSH.md) 
+- [Git SSH](./Git/GitSSH.md)
