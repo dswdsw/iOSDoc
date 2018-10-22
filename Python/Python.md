@@ -8,4 +8,6 @@
 
 自动补全插件：SublimeCodeIntel
 
-python pep8 autoformat 代码格式化
+## Python 语法
+
+[基础语法和格式](https://blog.csdn.net/zzq900503/article/details/80538346)
