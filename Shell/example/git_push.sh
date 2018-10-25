@@ -8,12 +8,11 @@ function getdir(){
 
 function push(){
 
-cd $1
+	cd $1
 
-git add .
-git commit -m "update"
-git push origin
-
+	git add .
+	git commit -m "update"
+	git push origin
 }
 
 read  -p "请输入目录： " doc
