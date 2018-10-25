@@ -12,6 +12,8 @@ function checkout(){
 
 read  -p "请输入目录： " filename
 
+sum=0;
+
 while read line
 do
 	# 获取pod
@@ -34,14 +36,13 @@ do
     # echo "$targer_dir"
     
     if [  -d $targer_dir ];then
+      sum=`expr ${sum} + 1`
       checkout $targer_dir $version
     fi
 
+   fi
   fi
-
-
-
-fi
-
 done < $filename'/TuyaSmart_iOS/Podfile'
+
+echo "共拉取：${sum} 个模块"
 

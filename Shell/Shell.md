@@ -8,6 +8,11 @@ chmod 777 文件名.sh
 
 ```
 
+## shell语法
+
+- [shell语法](http://www.runoob.com/linux/linux-shell.html)
+
+
 ## Shell用法
 
 ### 1.输入参数
