@@ -43,7 +43,7 @@ function push(){
     echo "${result}"
     git push origin
   else
-    echo "no changed"
+    echo "-------------------no changed----------------------------"
   fi
 
 }
