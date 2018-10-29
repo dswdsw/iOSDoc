@@ -77,6 +77,63 @@ function checkoutAndNewBranch(){
 
 }
 
+function clone()
+{
+
+  doc=$1
+
+  moduleName=$2
+
+  url="ssh://git@code.registry.wgine.com:10023/tuyaIOS/"$moduleName".git"
+
+  cd $doc
+  git clone $url
+  cd  $moduleName
+  git pull
+}
+
+function podfileUpdate(){
+
+  doc=$1
+
+  moduleName=$2
+
+  while read line
+  do
+  # 获取pod
+  if [[ $line == pod* ]]
+  then
+
+   array=(${line//,/ })  
+
+   if [[ ${#array[@]}==3 ]]; then
+    element=${array[1]} 
+    version=${array[2]} 
+    if [[ ${array[7]} ]]; then
+      version=${array[7]}
+    fi
+
+    element=(${element//\'})
+    version=(${version//\'})
+
+    if [[ "$element" == "$moduleName" ]]; then
+
+      newModuleBranchName=$(getBranchName $1"/TuyaSmart_iOS")
+      podNew="pod '${moduleName}', :git => 'https://code.registry.wgine.com/tuyaIOS/${moduleName}', :branch => '${newModuleBranchName}'"
+
+      line=${line//\//\\}
+      podNew=${podNew//\//\\\/}
+
+      sed -in-place -e "s/$line/$podNew/"  $doc'/TuyaSmart_iOS/Podfile'
+      rm -f $doc'/TuyaSmart_iOS/Podfilen-place'
+      
+      return
+    fi
+   fi
+  fi
+  done < $doc'/TuyaSmart_iOS/Podfile'
+}
+
 function push(){
   cd $1
 
@@ -105,6 +162,14 @@ function copy(){
       return
     fi
 
+    #未拉取,clone修改的对应模块
+    if [[ -d $new_dir ]]; then
+      if [[ ! -d $targer_dir ]]; then
+       clone $1 $2
+      fi
+    fi
+
+
     if [  -d $new_dir ];then
        if [  -d $targer_dir ];then
           
@@ -123,6 +188,9 @@ function copy(){
               checkoutAndNewBranch $targer_dir $podModuleBranchName $newModuleBranchName 
               echo "复制到：$targer_dir"
               sudo cp -R   $new_dir  $targer_dir 
+
+              #修改podfile文件
+              podfileUpdate $1 $2
 
               push $targer_dir
             else
