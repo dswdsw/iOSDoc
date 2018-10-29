@@ -69,6 +69,10 @@ function checkoutAndNewBranch(){
 
   git checkout $branchName
 
+  if [[ "$branchName" == "$newbranchName" ]]; then
+    return
+  fi
+
   git branch  $newbranchName
 
   git checkout $newbranchName
@@ -138,7 +142,10 @@ function push(){
   cd $1
 
   git add .
-  result=`git commit -m "update"`
+
+  read  -p "输入$1更新日志： " log
+
+  result=`git commit -m "${log}"`
   if [[ $result != *nothing* ]]; then
     echo -e "\n$1/$element"
     echo "update:${element}"
@@ -146,6 +153,7 @@ function push(){
   else
     echo "-------------------no changed----------------------------"
   fi
+  return
 
 }
 
@@ -179,7 +187,7 @@ function copy(){
 
           # 修改的模块创建新分支push
           if [[ "$newModuleBranchName" != "$nowModuleBranchName" ]]; then
-            read  -p "是否新建模块$2分支${newModuleBranchName} (1:是 0:否) " -n 1 add
+            read  -p "是否切换模块$2分支${newModuleBranchName} (1:是 0:否) " -n 1 add
             echo -e "\n"
 
             if [[ $add == "1" ]]; then
@@ -212,7 +220,7 @@ function copy(){
 
 
 function getModuledir(){
-    for element in `ls $1`
+    for element in `ls $1"/TuyaSmart_iOS/Pods"`
     do  
         copy $1 $element
     done
