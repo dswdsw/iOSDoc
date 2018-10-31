@@ -141,18 +141,13 @@ function podfileUpdate(){
 function push(){
   cd $1
 
-  git add .
-
   read  -p "输入$1更新日志： " log
+  
+  git add .
+  git commit -m "${log}"
+  git push origin
 
-  result=`git commit -m "${log}"`
-  if [[ $result != *nothing* ]]; then
-    echo -e "\n$1/$element"
-    echo "update:${element}"
-    git push origin
-  else
-    echo "-------------------no changed----------------------------"
-  fi
+  
   return
 
 }
