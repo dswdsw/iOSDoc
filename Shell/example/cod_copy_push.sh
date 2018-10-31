@@ -237,7 +237,7 @@ echo -e "start:...\n"
 getModuledir $doc
 
 if [[ "$pushMaster" == "1" ]]; then
-  push $1"/TuyaSmart_iOS"
+  push $doc"/TuyaSmart_iOS"
 fi
 
 echo -e "end...\n"
