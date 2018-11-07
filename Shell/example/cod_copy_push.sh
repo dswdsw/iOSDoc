@@ -155,6 +155,8 @@ function push(){
 
   branchName= $(getBranchName $1)
 
+  git fetch
+  
   git add .
   git commit -m "${log}"
   git push origin
