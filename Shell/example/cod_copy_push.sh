@@ -142,10 +142,12 @@ function push(){
   cd $1
 
   read  -p "输入$1更新日志： " log
-  
+
+  branchName= $(getBranchName $1)
+
   git add .
   git commit -m "${log}"
-  git push origin
+  git push origin HEAD:$branchName
 
   
   return
