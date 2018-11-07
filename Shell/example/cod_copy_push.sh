@@ -48,6 +48,7 @@ function getPodModuleBranchName(){
     if [  -d $targer_dir ];then
       sum=`expr ${sum} + 1`
       checkout $targer_dir $version
+      git fetch
     fi
 
    fi
@@ -69,6 +70,8 @@ function checkoutAndNewBranch(){
 
   git checkout $branchName
 
+  git fetch
+
   if [[ "$branchName" == "$newbranchName" ]]; then
     return
   fi
@@ -76,6 +79,8 @@ function checkoutAndNewBranch(){
   git branch  $newbranchName
 
   git checkout $newbranchName
+
+  git fetch
 
   git push origin $newbranchName
 
@@ -141,13 +146,18 @@ function podfileUpdate(){
 function push(){
   cd $1
 
+  result=`git status -s $1`
+  if [[ -z "$result" ]]; then
+      return
+  fi
+
   read  -p "输入$1更新日志： " log
 
   branchName= $(getBranchName $1)
 
   git add .
   git commit -m "${log}"
-  git push origin HEAD:$branchName
+  git push origin
 
   
   return

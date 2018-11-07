@@ -7,3 +7,5 @@ cd $doc
 read  -p "请输入分支名： " branchName
 
 git checkout $branchName
+
+git fetch
