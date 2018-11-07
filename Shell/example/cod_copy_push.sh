@@ -153,8 +153,6 @@ function push(){
 
   read  -p "输入$1更新日志： " log
 
-  branchName= $(getBranchName $1)
-
   git fetch
   
   git add .
