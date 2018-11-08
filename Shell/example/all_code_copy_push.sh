@@ -186,11 +186,7 @@ function copy(){
     targer_dir=$1"/"$2
 
     # #判断目录是否新建
-    # cd  $1"/TuyaSmart_iOS"
     result=$(getPodModuleBranchName $1 $2)
-
-    echo "$result"
-
     if [[ -z "$result" ]]; then
       return
     fi
@@ -213,7 +209,6 @@ function copy(){
           # 修改的模块创建新分支push
           if [[ "$podModuleBranchName" != "$nowModuleBranchName" ]]; then
             read  -p "是否切换模块$2分支${newModuleBranchName} (1:是 0:否) " -n 1 add
-            echo -e "\n"
 
             if [[ $add == "1" ]]; then
 
@@ -254,14 +249,14 @@ function getModuledir(){
 #模块全上传后执行
 pushMaster="1"
 
-read  -p "请输入项目根目录： " doc
+read  -p "请输入项目根目录： " rootPath
 
-echo -e "start:...\n"
+echo -e "start:..."
 
 # 获取模块文件
-getModuledir $doc
+getModuledir $rootPath
 
-echo -e "end...\n"
+echo -e "end..."
 
 read  -p "执行完成......." end
 

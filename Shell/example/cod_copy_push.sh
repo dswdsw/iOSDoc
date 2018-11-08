@@ -251,15 +251,15 @@ function getModuledir(){
 #模块全上传后执行
 pushMaster="1"
 
-read  -p "请输入项目根目录： " doc
+read  -p "请输入项目根目录： " rootPath
 
 echo -e "start:...\n"
 
 # 获取模块文件
-getModuledir $doc
+getModuledir $rootPath
 
 if [[ "$pushMaster" == "1" ]]; then
-  push $doc"/TuyaSmart_iOS"
+  push $rootPath"/TuyaSmart_iOS"
 fi
 
 echo -e "end...\n"
