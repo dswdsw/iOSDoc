@@ -29,11 +29,7 @@ function getPodModuleBranchName(){
 
    if [[ ${#array[@]}==3 ]]; then
     element=${array[1]} 
-    version=${array[2]} 
-    if [[ ${array[7]} ]]; then
-      version=${array[7]}
-    fi
-
+    version=${array[7]}
     element=(${element//\'})
     version=(${version//\'})
 
@@ -58,10 +54,12 @@ function checkoutAndNewBranch(){
 
   cd $doc
 
+  echo "当前目录:$doc"
+
   result=`git tag | grep  $branchName`
   if [[ -z "$result" ]]; then
    #不是tag
-    
+     
     git checkout . 
 
     git fetch
@@ -159,6 +157,8 @@ function push(){
 
   cd $doc
 
+  echo "当前路径：$doc"
+
   result=`git status -s $doc`
   if [[ -z "$result" ]]; then
       return
@@ -185,12 +185,16 @@ function copy(){
 
     targer_dir=$1"/"$2
 
-    # #判断目录是否修改
-    cd  $1"/TuyaSmart_iOS"
-    result=`git status -s $new_dir`
+    # #判断目录是否新建
+    # cd  $1"/TuyaSmart_iOS"
+    result=$(getPodModuleBranchName $1 $2)
+
+    echo "$result"
+
     if [[ -z "$result" ]]; then
       return
     fi
+
 
     #未拉取,clone修改的对应模块
     if [[ -d $new_dir ]]; then
@@ -205,17 +209,16 @@ function copy(){
           
           podModuleBranchName=$(getPodModuleBranchName $1 $2)
           nowModuleBranchName=$(getBranchName $targer_dir)
-          newModuleBranchName=$(getBranchName $1"/TuyaSmart_iOS")
 
           # 修改的模块创建新分支push
-          if [[ "$newModuleBranchName" != "$nowModuleBranchName" ]]; then
+          if [[ "$podModuleBranchName" != "$nowModuleBranchName" ]]; then
             read  -p "是否切换模块$2分支${newModuleBranchName} (1:是 0:否) " -n 1 add
             echo -e "\n"
 
             if [[ $add == "1" ]]; then
 
               #创建新分支
-              checkoutAndNewBranch $targer_dir $podModuleBranchName $newModuleBranchName 
+              checkoutAndNewBranch $targer_dir $podModuleBranchName $podModuleBranchName 
               echo "复制到：$targer_dir"
               sudo cp -R   $new_dir  $targer_dir 
 
@@ -224,7 +227,7 @@ function copy(){
 
               push $targer_dir
             else
-              pushMaster="0"
+              pushMaster="1"
               return 
             fi
           else
@@ -257,10 +260,6 @@ echo -e "start:...\n"
 
 # 获取模块文件
 getModuledir $doc
-
-if [[ "$pushMaster" == "1" ]]; then
-  push $doc"/TuyaSmart_iOS"
-fi
 
 echo -e "end...\n"
 
