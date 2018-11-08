@@ -62,9 +62,7 @@ function checkoutAndNewBranch(){
   if [[ -z "$result" ]]; then
    #不是tag
     
-    git checkout . 
-
-    git fetch
+    git checkout . && git clean -xdf
 
     git checkout $branchName
 
