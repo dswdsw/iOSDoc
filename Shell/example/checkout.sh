@@ -9,6 +9,8 @@ git checkout . && git clean -xdf
 
 git checkout $branchName
 
+git branch -u origin/$branchName
+
 git fetch
 
 read  -p "请输入目录： " doc
