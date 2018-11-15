@@ -54,15 +54,15 @@ function checkoutAndNewBranch(){
 
   cd $doc
 
-  echo "当前目录:$doc"
-
   result=`git tag | grep  $branchName`
   if [[ -z "$result" ]]; then
    #不是tag
-     
+    
     git checkout . && git clean -xdf
 
     git checkout $branchName
+
+    git branch -u origin/$branchName
 
     git fetch
 
@@ -70,19 +70,19 @@ function checkoutAndNewBranch(){
       return
     fi
 
-    git branch  $newbranchName
-
-    git checkout $newbranchName
-
-    git pull origin
+    git checkout -b $newbranchName
 
     git push origin $newbranchName
+
+    git branch -u origin/$newbranchName
 
    else
    #是tag
     git checkout -b $newbranchName $branchName
 
     git push origin $newbranchName
+
+    git branch -u origin/$newbranchName
    
   fi
 
@@ -156,6 +156,8 @@ function push(){
   cd $doc
 
   echo "当前路径：$doc"
+
+  git branch -u origin/$newModuleBranchName
 
   result=`git status -s $doc`
   if [[ -z "$result" ]]; then
