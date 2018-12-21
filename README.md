@@ -1,11 +1,30 @@
 # iOS 文档
 
 ## ruby
-rvm  ruby 安装管理
+rvm   - ruby安装管理
 
-ruby
+```
+$ curl -L get.rvm.io | bash -s stable
+$ source ~/.rvm/scripts/rvm
+```
 
-rubygem （gem） ruby 应用安装
+ruby 安装
+
+```
+rvm list known  #列出ruby可安装的版本信息
+
+rvm install version # 安装一个ruby
+
+rvm list  #查看已安装的ruby
+
+rvm use 2.1.4 --default # 设置默认
+```
+
+rubygem （ gem ） - ruby 应用安装
+
+```
+gem update --system  
+```
 
 ## Git
 
