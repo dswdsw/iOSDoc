@@ -1,5 +1,9 @@
 #!/bin/bash
 
+RED_COLOR='\E[1;31m'
+
+RESET='\E[0m'
+
 # 获取分支名
 function getBranchName()
 {
@@ -168,6 +172,10 @@ function push(){
 
   read  -p "$moduleName->($newModuleBranchName)的更新日志： " log
 
+  if [ -z "$STRING" ]; then 
+    log='update'
+  fi
+
   git add .
   git commit -m "${log}"
 
@@ -208,6 +216,8 @@ function copy(){
           podModuleBranchName=$(getPodModuleBranchName $1 $2)
           nowModuleBranchName=$(getBranchName $targer_dir)
           newModuleBranchName=$(getBranchName $1"/TuyaSmart_iOS")
+
+          echo -e  "${RED_COLOR}===$2===${RESET}"
 
           # 修改的模块创建新分支push
           if [[ "$newModuleBranchName" != "$nowModuleBranchName" ]]; then

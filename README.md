@@ -1,5 +1,11 @@
 # iOS 文档
 
+## ruby
+rvm  ruby 安装管理
+
+ruby
+
+rubygem （gem） ruby 应用安装
 
 ## Git
 
