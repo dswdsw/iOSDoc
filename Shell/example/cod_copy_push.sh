@@ -172,7 +172,7 @@ function push(){
 
   read  -p "$moduleName->($newModuleBranchName)的更新日志： " log
 
-  if [ -z "$STRING" ]; then 
+  if [ -z "$log" ]; then 
     log='update'
   fi
 
