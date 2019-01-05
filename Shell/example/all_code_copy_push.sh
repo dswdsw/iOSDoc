@@ -155,22 +155,31 @@ function push(){
 
   cd $doc
 
-  echo "当前路径：$doc"
-
   git branch -u origin/$newModuleBranchName
 
+  #是否有修改
   result=`git status -s $doc`
-  if [[ -z "$result" ]]; then
+
+  #是否有未提交
+  result2=`git cherry -v`
+
+  if [[ -z "$result" && -z "$result2" ]]; then
       return
   fi
 
   read  -p "$moduleName->($newModuleBranchName)的更新日志： " log
+
+  if [ -z "$log" ]; then 
+    log='update'
+  fi
 
   git add .
   git commit -m "${log}"
 
   #todo 代码冲突处理
   git pull origin 
+
+  git commit -m "${log}"
 
   git push origin 
 
