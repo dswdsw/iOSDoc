@@ -224,6 +224,10 @@ function copy(){
             read  -p "是否切换模块$2分支${newModuleBranchName} (1:是 0:否) " -n 1 add
             echo -e "\n"
 
+            if [ -z "$add" ]; then 
+              add='1'
+            fi
+
             if [[ $add == "1" ]]; then
 
               #创建新分支
