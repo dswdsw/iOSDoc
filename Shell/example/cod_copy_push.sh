@@ -165,8 +165,13 @@ function push(){
 
   git branch -u origin/$newModuleBranchName
 
+  #是否有修改
   result=`git status -s $doc`
-  if [[ -z "$result" ]]; then
+
+  #是否有未提交
+  result2=`git cherry -v`
+
+  if [[ -z "$result" && -z "$result2" ]]; then
       return
   fi
 
@@ -181,6 +186,8 @@ function push(){
 
   #todo 代码冲突处理
   git pull origin 
+
+  git commit -m "${log}"
 
   git push origin 
 
