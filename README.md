@@ -26,6 +26,14 @@ rubygem （ gem ） - ruby 应用安装
 gem update --system  
 ```
 
+gem 安装卸载应用
+
+```
+sudo gem install [name]  -v [version] 
+
+sudo gem uninstall [name]  -v [version] 
+```
+
 ## Git
 
 - [Git SSH](./Git/GitSSH.md)
