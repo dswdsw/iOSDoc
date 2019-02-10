@@ -194,7 +194,7 @@ function copy(){
 
     targer_dir=$1"/"$2
 
-    # #判断目录是否新建
+    # #判断模块是否新建分支
     result=$(getPodModuleBranchName $1 $2)
     if [[ -z "$result" ]]; then
       return
