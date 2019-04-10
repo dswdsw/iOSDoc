@@ -170,16 +170,16 @@ function push(){
   read  -p "$moduleName->($newModuleBranchName)的更新日志： " log
 
   if [ -z "$log" ]; then 
-    log='update'
+    log='ui修改'
   fi
 
   git add .
-  git commit -m "${log}"
+  git commit -m "feat: ${log}"
 
   #todo 代码冲突处理
   git pull origin 
 
-  git commit -m "${log}"
+  git commit -m "feat: ${log}"
 
   git push origin 
 

@@ -140,12 +140,12 @@ function podfileUpdate(){
       newModuleBranchName=$(getBranchName $1"/TuyaSmart_iOS")
       podNew="pod '${moduleName}', :git => 'https://code.registry.wgine.com/tuyaIOS/${moduleName}', :branch => '${newModuleBranchName}'"
 
-      line=${line//\//\\}
+      line=${line//\//\\\/}
       podNew=${podNew//\//\\\/}
 
       sed -in-place -e "s/$line/$podNew/"  $doc'/TuyaSmart_iOS/Podfile'
       rm -f $doc'/TuyaSmart_iOS/Podfilen-place'
-      
+
       return
     fi
    fi
@@ -182,12 +182,12 @@ function push(){
   fi
 
   git add .
-  git commit -m "feat:${log}"
+  git commit -m "feat: ${log}"
 
   #todo 代码冲突处理
   git pull origin 
 
-  git commit -m "feat:${log}"
+  git commit -m "feat: ${log}"
 
   git push origin 
 
@@ -254,6 +254,9 @@ function copy(){
             echo "复制到：$targer_dir"
             sudo cp -R   $new_dir  $targer_dir 
 
+            #修改podfile文件
+            podfileUpdate $1 $2
+            
             push $targer_dir
 
 
