@@ -13,3 +13,5 @@ git branch -u origin/$branchName
 
 git fetch
 
+echo "checkout done..."
+
