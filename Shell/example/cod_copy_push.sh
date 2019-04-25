@@ -1,8 +1,13 @@
 #!/bin/bash
 
-RED_COLOR='\E[1;31m'
+RED_COLOR='\033[31m'
 
-RESET='\E[0m'
+BLUE_COLOR='\033[36m'
+
+PURPLE_COLOR='\033[35m'
+
+RESET='\033[0m'
+
 
 # 获取分支名
 function getBranchName()
@@ -14,6 +19,7 @@ function getBranchName()
   result=(${result//\*})
 
   echo $result
+
 }
 
 # 获取pod中模块分支名
@@ -175,7 +181,10 @@ function push(){
       return
   fi
 
-  read  -p "$moduleName->($newModuleBranchName)的更新日志： " log
+  echo -e  "${BLUE_COLOR}$moduleName ${RESET} -> ${PURPLE_COLOR} ($newModuleBranchName) ${RESET}的更新日志："
+  read  -p " " log
+
+
 
   if [ -z "$log" ]; then 
     log='功能修改'
@@ -224,7 +233,7 @@ function copy(){
           nowModuleBranchName=$(getBranchName $targer_dir)
           newModuleBranchName=$(getBranchName $1"/TuyaSmart_iOS")
 
-          echo -e  "${RED_COLOR}===$2===${RESET}"
+          echo -e  "${BLUE_COLOR}====$2===============================${RESET}"
 
           # 修改的模块创建新分支push
           if [[ "$newModuleBranchName" != "$nowModuleBranchName" ]]; then
@@ -279,7 +288,7 @@ pushMaster="1"
 
 read  -p "请输入项目根目录： " rootPath
 
-echo -e "start:...\n"
+echo -e  "${RED_COLOR}======   start...  =================${RESET}"
 
 # 获取模块文件
 getModuledir $rootPath
@@ -288,7 +297,9 @@ if [[ "$pushMaster" == "1" ]]; then
   push $rootPath"/TuyaSmart_iOS"
 fi
 
-echo -e "end...\n"
+echo -e  "${RED_COLOR}======   end...  =================${RESET}"
 
 read  -p "执行完成......." end
+
+
 
