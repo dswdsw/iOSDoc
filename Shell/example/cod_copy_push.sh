@@ -1,83 +1,70 @@
 #!/bin/bash
 
 RED_COLOR='\033[31m'
-
 BLUE_COLOR='\033[36m'
-
 PURPLE_COLOR='\033[35m'
-
 RESET='\033[0m'
 
-
 # 获取分支名
-function getBranchName()
-{
-  cd  $1
+function getBranchName() {
+  cd $1
 
-  result=`git branch | grep '^*' `
-
-  result=(${result//\*})
+  result=$(git branch | grep '^*')
+  result=(${result//\*/})
 
   echo $result
 
 }
 
 # 获取pod中模块分支名
-function getPodModuleBranchName(){
-   
+function getPodModuleBranchName() {
+
   doc=$1
 
   moduleName=$2
 
-  while read line
-  do
-  # 获取pod
-  if [[ $line == pod* ]]
-  then
+  while read line; do
+    # 获取pod
+    if [[ $line == pod* ]]; then
 
-   array=(${line//,/ })  
+      array=(${line//,/ })
 
-   if [[ ${#array[@]}==3 ]]; then
-    element=${array[1]} 
-    version=${array[2]} 
-    if [[ ${array[7]} ]]; then
-      version=${array[7]}
+      if [[ ${#array[@]}==3 ]]; then
+        element=${array[1]}
+        version=${array[2]}
+        if [[ ${array[7]} ]]; then
+          version=${array[7]}
+        fi
+
+        element=(${element//\'/})
+        version=(${version//\'/})
+
+        if [[ "$element" == "$moduleName" ]]; then
+          echo $version
+          return
+        fi
+      fi
     fi
-
-    element=(${element//\'})
-    version=(${version//\'})
-
-    if [[ "$element" == "$moduleName" ]]; then
-      echo $version
-      return
-    fi
-   fi
-  fi
-  done < $doc'/TuyaSmart_iOS/Podfile'
+  done <$doc'/TuyaSmart_iOS/Podfile'
 
 }
 
 # 拉取模块在pod里的分支，
-function checkoutAndNewBranch(){
-  
+function checkoutAndNewBranch() {
+
   doc=$1
-
   branchName=$2
-
   newbranchName=$3
 
   cd $doc
 
-  result=`git tag | grep  $branchName`
+  result=$(git tag | grep $branchName)
   if [[ -z "$result" ]]; then
-   #不是tag
-    
+    #不是tag
+
     git checkout . && git clean -xdf
-
     git checkout $branchName
-
     git branch -u origin/$branchName
-
     git fetch
 
     if [[ "$branchName" == "$newbranchName" ]]; then
@@ -85,84 +72,77 @@ function checkoutAndNewBranch(){
     fi
 
     git checkout -b $newbranchName
-
     git push origin $newbranchName
-
     git branch -u origin/$newbranchName
 
-   else
-   #是tag
+  else
+    #是tag
     git checkout -b $newbranchName $branchName
 
     git push origin $newbranchName
 
     git branch -u origin/$newbranchName
-   
+
   fi
 
 }
 
-function clone()
-{
+function clone() {
 
   doc=$1
-
   moduleName=$2
-
   url="ssh://git@code.registry.wgine.com:10023/tuyaIOS/"$moduleName".git"
 
   cd $doc
   git clone $url
-  cd  $moduleName
+  cd $moduleName
   git pull origin
 }
 
-function podfileUpdate(){
+function podfileUpdate() {
 
   doc=$1
 
   moduleName=$2
 
-  while read line
-  do
-  # 获取pod
-  if [[ $line == pod* ]]
-  then
+  while read line; do
+    # 获取pod
+    if [[ $line == pod* ]]; then
 
-   array=(${line//,/ })  
+      array=(${line//,/ })
 
-   if [[ ${#array[@]}==3 ]]; then
-    element=${array[1]} 
-    version=${array[2]} 
-    if [[ ${array[7]} ]]; then
-      version=${array[7]}
+      if [[ ${#array[@]}==3 ]]; then
+        element=${array[1]}
+        version=${array[2]}
+        if [[ ${array[7]} ]]; then
+          version=${array[7]}
+        fi
+
+        element=(${element//\'/})
+        version=(${version//\'/})
+
+        if [[ "$element" == "$moduleName" ]]; then
+
+          newModuleBranchName=$(getBranchName $1"/TuyaSmart_iOS")
+          podNew="pod '${moduleName}', :git => 'https://code.registry.wgine.com/tuyaIOS/${moduleName}', :branch => '${newModuleBranchName}'"
+
+          line=${line//\//\\\/}
+          podNew=${podNew//\//\\\/}
+
+          sed -in-place -e "s/$line/$podNew/" $doc'/TuyaSmart_iOS/Podfile'
+          rm -f $doc'/TuyaSmart_iOS/Podfilen-place'
+
+          return
+        fi
+      fi
     fi
-
-    element=(${element//\'})
-    version=(${version//\'})
-
-    if [[ "$element" == "$moduleName" ]]; then
-
-      newModuleBranchName=$(getBranchName $1"/TuyaSmart_iOS")
-      podNew="pod '${moduleName}', :git => 'https://code.registry.wgine.com/tuyaIOS/${moduleName}', :branch => '${newModuleBranchName}'"
-
-      line=${line//\//\\\/}
-      podNew=${podNew//\//\\\/}
-
-      sed -in-place -e "s/$line/$podNew/"  $doc'/TuyaSmart_iOS/Podfile'
-      rm -f $doc'/TuyaSmart_iOS/Podfilen-place'
-
-      return
-    fi
-   fi
-  fi
-  done < $doc'/TuyaSmart_iOS/Podfile'
+  done <$doc'/TuyaSmart_iOS/Podfile'
 }
 
-function push(){
+function push() {
 
   doc=$1
-  
+
   newModuleBranchName=$(getBranchName $doc)
 
   moduleName=${doc##*/}
@@ -172,21 +152,19 @@ function push(){
   git branch -u origin/$newModuleBranchName
 
   #是否有修改
-  result=`git status -s $doc`
+  result=$(git status -s $doc)
 
   #是否有未提交
-  result2=`git cherry -v`
+  result2=$(git cherry -v)
 
   if [[ -z "$result" && -z "$result2" ]]; then
-      return
+    return
   fi
 
-  echo -e  "${BLUE_COLOR}$moduleName ${RESET} -> ${PURPLE_COLOR} ($newModuleBranchName) ${RESET}的更新日志："
-  read  -p " " log
+  echo -e "${BLUE_COLOR}$moduleName ${RESET} -> ${PURPLE_COLOR} ($newModuleBranchName) ${RESET}的更新日志："
+  read -p " " log
 
-
-
-  if [ -z "$log" ]; then 
+  if [ -z "$log" ]; then
     log='功能修改'
   fi
 
@@ -194,101 +172,83 @@ function push(){
   git commit -m "feat: ${log}"
 
   #todo 代码冲突处理
-  git pull origin 
+  git pull origin
 
   git commit -m "feat: ${log}"
 
-  git push origin 
+  git push origin
 
-  
   return
 
 }
 
-function copy(){
+function copy() {
 
-    new_dir=$1"/TuyaSmart_iOS/Pods/"$2"/"$2
+  new_dir=$1"/TuyaSmart_iOS/Pods/"$2"/"$2
 
-    targer_dir=$1"/"$2
+  targer_dir=$1"/"$2
 
-    # #判断目录是否修改
-    cd  $1"/TuyaSmart_iOS"
-    result=`git status -s $new_dir`
-    if [[ -z "$result" ]]; then
+  if [[ ! -d $new_dir ]]; then
+    return
+  fi
+
+  # #判断目录是否修改
+  cd $1"/TuyaSmart_iOS"
+  result=$(git status -s $new_dir)
+  if [[ -z "$result" ]]; then
+    return
+  fi
+
+  #未拉取,clone修改的对应模块
+  if [[ ! -d $targer_dir ]]; then
+    clone $1 $2
+  fi
+
+  podModuleBranchName=$(getPodModuleBranchName $1 $2)
+  nowModuleBranchName=$(getBranchName $targer_dir)
+  newModuleBranchName=$(getBranchName $1"/TuyaSmart_iOS")
+
+  echo -e "${BLUE_COLOR}==== $2 ===============================${RESET}"
+
+  # 修改的模块创建新分支push
+  if [[ "$newModuleBranchName" != "$nowModuleBranchName" ]]; then
+    read -p "是否切换模块$2分支${newModuleBranchName} (1:是 0:否) " -n 1 add
+    echo -e "\n"
+
+    if [ -z "$add" ]; then
+      add='1'
+    fi
+
+    if [[ $add == "1" ]]; then
+      #创建新分支
+      checkoutAndNewBranch $targer_dir $podModuleBranchName $newModuleBranchName
+    else
+      pushMaster="0"
       return
     fi
+  fi
 
-    #未拉取,clone修改的对应模块
-    if [[ -d $new_dir ]]; then
-      if [[ ! -d $targer_dir ]]; then
-       clone $1 $2
-      fi
-    fi
+  echo "复制到：$targer_dir"
+  echo dsw | sudo -S cp -R $new_dir $targer_dir
+  echo -e "\n"
+  #修改podfile文件
+  podfileUpdate $1 $2
+  push $targer_dir
 
-
-    if [  -d $new_dir ];then
-       if [  -d $targer_dir ];then
-          
-          podModuleBranchName=$(getPodModuleBranchName $1 $2)
-          nowModuleBranchName=$(getBranchName $targer_dir)
-          newModuleBranchName=$(getBranchName $1"/TuyaSmart_iOS")
-
-          echo -e  "${BLUE_COLOR}====$2===============================${RESET}"
-
-          # 修改的模块创建新分支push
-          if [[ "$newModuleBranchName" != "$nowModuleBranchName" ]]; then
-            read  -p "是否切换模块$2分支${newModuleBranchName} (1:是 0:否) " -n 1 add
-            echo -e "\n"
-
-            if [ -z "$add" ]; then 
-              add='1'
-            fi
-
-            if [[ $add == "1" ]]; then
-
-              #创建新分支
-              checkoutAndNewBranch $targer_dir $podModuleBranchName $newModuleBranchName 
-              echo "复制到：$targer_dir"
-              sudo cp -R   $new_dir  $targer_dir 
-
-              #修改podfile文件
-              podfileUpdate $1 $2
-
-              push $targer_dir
-            else
-              pushMaster="0"
-              return 
-            fi
-          else
-            echo "复制到：$targer_dir"
-            sudo cp -R   $new_dir  $targer_dir 
-
-            #修改podfile文件
-            podfileUpdate $1 $2
-            
-            push $targer_dir
-
-
-          fi
-       fi
-
-    fi
 }
 
-
-function getModuledir(){
-    for element in `ls $1"/TuyaSmart_iOS/Pods"`
-    do  
-        copy $1 $element
-    done
+function getModuledir() {
+  for element in $(ls $1"/TuyaSmart_iOS/Pods"); do
+    copy $1 $element
+  done
 }
 
 #模块全上传后执行
 pushMaster="1"
 
-read  -p "请输入项目根目录： " rootPath
+read -p "请输入项目根目录： " rootPath
 
-echo -e  "${RED_COLOR}======   start...  =================${RESET}"
+echo -e "${RED_COLOR}======   start...  =================${RESET}"
 
 # 获取模块文件
 getModuledir $rootPath
@@ -297,9 +257,6 @@ if [[ "$pushMaster" == "1" ]]; then
   push $rootPath"/TuyaSmart_iOS"
 fi
 
-echo -e  "${RED_COLOR}======   end...  =================${RESET}"
+echo -e "${RED_COLOR}======   end...  =================${RESET}"
 
-read  -p "执行完成......." end
-
-
-
+read -p "执行完成......." end
