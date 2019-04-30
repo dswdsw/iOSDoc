@@ -165,7 +165,29 @@ function push() {
   read -p " " log
 
   if [ -z "$log" ]; then
-    log='功能修改'
+
+    if [[ $result == *View* ]];then
+
+      pool=('UI修改' 'UI细节修改' '模块UI调整' '模块定制UI' '调整UI'  'change UI' 'UI fix' )
+
+      count=${#pool[@]}
+
+      num=$(($RANDOM%$count+1))
+
+      log=${pool[$num]}
+
+    else
+      
+      pool=('模块需求开发' '业务逻辑修改' '功能模块开发' '业务修改' 'bug修复' 'fix 一些问题' '功能修改' )
+
+      count=${#pool[@]}
+
+      num=$(($RANDOM%$count+1))
+
+      log=${pool[$num]}
+
+    fi
+ 
   fi
 
   git add .
