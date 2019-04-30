@@ -177,7 +177,7 @@ function push() {
       log=${pool[$num]}
 
     else
-      
+
       pool=('模块需求开发' '业务逻辑修改' '功能模块开发' '业务修改' 'bug修复' 'fix 一些问题' '功能修改' )
 
       count=${#pool[@]}
@@ -191,7 +191,7 @@ function push() {
   fi
 
   git add .
-  git commit -m "feat: ${log}"
+  git commit -m "feat: ${moduleName}->${newModuleBranchName} ${log}"
 
   #代码冲突会停止操作
   git pull origin  $newModuleBranchName
