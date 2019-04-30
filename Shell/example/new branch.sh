@@ -11,7 +11,7 @@ git checkout $branchName
 
 git branch -u origin/$branchName
 
-git fetch
+git fetch origin  $branchName
 
 read  -p "请输入新建分支名： " newbranchName
 

@@ -65,7 +65,7 @@ function checkoutAndNewBranch() {
     git checkout . && git clean -xdf
     git checkout $branchName
     git branch -u origin/$branchName
-    git fetch
+    git fetch origin  $branchName
 
     if [[ "$branchName" == "$newbranchName" ]]; then
       return
@@ -171,12 +171,10 @@ function push() {
   git add .
   git commit -m "feat: ${log}"
 
-  #todo 代码冲突处理
-  git pull origin
+  #代码冲突会停止操作
+  git pull origin  $newModuleBranchName
 
-  git commit -m "feat: ${log}"
-
-  git push origin
+  git push origin  $newModuleBranchName
 
   return
 

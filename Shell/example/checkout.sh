@@ -17,7 +17,7 @@ git checkout $branchName
 
 git branch -u origin/$branchName
 
-git fetch
+git fetch origin $branchName
 
 echo -e  "${RED_COLOR}=== success checkout ===${RESET}"
 
