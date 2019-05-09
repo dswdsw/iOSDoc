@@ -91,7 +91,7 @@ function clone() {
 
   doc=$1
   moduleName=$2
-  url="ssh://git@code.registry.wgine.com:10023/tuyaIOS/"$moduleName".git"
+  url="https://code.registry.wgine.com/tuyaIOS/"$moduleName".git"
 
   cd $doc
   git clone $url
