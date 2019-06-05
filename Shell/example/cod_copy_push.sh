@@ -167,6 +167,11 @@ function push() {
     return
   fi
 
+  if [[ "$newModuleBranchName" != "$projectBranchName" ]]; then
+      echo -e "${RED_COLOR} *** error 分支跟主工程不一样  error *** {RESET} "
+      return
+  fi 
+
   echo -e "${BLUE_COLOR}$moduleName ${RESET} -> ${PURPLE_COLOR} ($newModuleBranchName) ${RESET}的更新日志："
   read -p " " log
 
