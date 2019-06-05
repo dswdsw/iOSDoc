@@ -49,7 +49,7 @@ function getPodModuleBranchName() {
 
 }
 
-# 拉取模块在pod里的分支，
+# 新建拉取模块在pod里的分支，
 function checkoutAndNewBranch() {
 
   doc=$1
@@ -61,6 +61,12 @@ function checkoutAndNewBranch() {
   result=$(git tag | grep $branchName)
   if [[ -z "$result" ]]; then
     #不是tag
+
+    #branchname 不存在？
+    exists=$(git show-branch  remotes/origin/$branchName)
+    if [[ -z "$exists" ]]; then
+      branchName='master'
+    fi
 
     git checkout . && git clean -xdf
     git checkout $branchName
@@ -208,23 +214,28 @@ function copy() {
 
   targer_dir=$1"/"$2
 
+  old_targer_dir=$1"/"$2"/"$2
+
+  podModuleBranchName=$(getPodModuleBranchName $1 $2)
+
   if [[ ! -d $new_dir ]]; then
     return
   fi
 
-  # #判断目录是否修改
+  # #判断目录是否修改  跟主工程分支名一样再同步一次
   cd $1"/TuyaSmart_iOS"
   result=$(git status -s $new_dir)
   if [[ -z "$result" ]]; then
-    return
+    if [[ "$podModuleBranchName" != "$projectBranchName" ]]; then
+      return
+    fi 
   fi
 
   #未拉取,clone修改的对应模块
   if [[ ! -d $targer_dir ]]; then
     clone $1 $2
   fi
-
-  podModuleBranchName=$(getPodModuleBranchName $1 $2)
+  
   nowModuleBranchName=$(getBranchName $targer_dir)
   newModuleBranchName=$(getBranchName $1"/TuyaSmart_iOS")
 
@@ -249,6 +260,7 @@ function copy() {
   fi
 
   echo "复制到：$targer_dir"
+  echo dsw | sudo -S rm -rf $old_targer_dir
   echo dsw | sudo -S cp -R $new_dir $targer_dir
   echo -e "\n"
   #修改podfile文件
@@ -269,6 +281,11 @@ pushMaster="1"
 read -p "请输入项目根目录： " rootPath
 
 echo -e "${RED_COLOR}======   start...  =================${RESET}"
+
+#主工程分支名
+projectBranchName=$(getBranchName $rootPath"/TuyaSmart_iOS")
+
+# echo $projectBranchName
 
 # 获取模块文件
 getModuledir $rootPath
