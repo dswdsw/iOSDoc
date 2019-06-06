@@ -1,3 +1,10 @@
+#!/bin/bash
+
+RED_COLOR='\033[31m'
+
+RESET='\033[0m'
+
+
 read  -p "请输入目录： " doc
 echo "目录为: $doc"
 
@@ -20,3 +27,5 @@ git checkout -b $newbranchName
 git push origin $newbranchName
 
 git branch -u origin/$newbranchName
+
+echo -e  "${RED_COLOR}=== done ===${RESET}"
