@@ -265,8 +265,8 @@ function copy() {
   fi
 
   echo "复制到：$targer_dir"
-  echo dsw | sudo -S rm -rf $old_targer_dir
-  echo dsw | sudo -S cp -R $new_dir $targer_dir
+  echo dswdsw | sudo -S rm -rf $old_targer_dir
+  echo dswdsw | sudo -S cp -R $new_dir $targer_dir
   echo -e "\n"
   #修改podfile文件
   podfileUpdate $1 $2
