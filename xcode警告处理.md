@@ -6,7 +6,7 @@ build settings -> other warning flags
 
 #### 设置值
 
--Wno-deprecated-declarations -Wno-unguarded-availability -Wno-implicit-retain-self -Wno-strict-prototypes -Wno-documentation -Wno-nullability-completeness
+-Wno-deprecated-declarations -Wno-unguarded-availability -Wno-implicit-retain-self -Wno-strict-prototypes -Wno-documentation -Wno-nullability-completeness -Wno-deprecated-implementations -Wno-protocol -Wno-objc-protocol-property-synthesis
 
 #### 含义
 
@@ -27,5 +27,12 @@ build settings -> other warning flags
 
 -Wno-nullability-completeness
 参数非空判断
+
+-Wno-deprecated-implementations
+协议未实现
+
+-Wno-protocol
+
+-Wno-objc-protocol-property-synthesis
 
 
