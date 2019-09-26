@@ -10,6 +10,8 @@ build settings -> other warning flags
 
 #### 含义
 
+-w 取消所有警告
+
 -Wno-deprecated-declarations
 方法弃用警告
 
