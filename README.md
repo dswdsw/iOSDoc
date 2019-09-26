@@ -47,5 +47,9 @@ sudo gem uninstall [name]  -v [version]
 
 - [Python](./Python/Python.md)
 
+## xcode
+
+- [xcode警告设置](./xcode警告处理.md)
+
 
 
