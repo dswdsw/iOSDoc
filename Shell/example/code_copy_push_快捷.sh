@@ -99,20 +99,13 @@ function clone() {
   moduleName=$2
   url="https://code.registry.wgine.com/tuyaIOS/"$moduleName".git"
 
-  read -p "是否clone模块$2 (1:是 0:否) " -n 1 add
-  echo -e "\n"
+  echo -e "${RED_COLOR}---   clone模块  ------${RESET}"
 
-  if [ -z "$add" ]; then
-    add='1'
-  fi
+  cd $doc
+  git clone $url
+  cd $moduleName
+  git pull origin
 
-  if [[ $add == "1" ]]; then
-    cd $doc
-    git clone $url
-    cd $moduleName
-    git pull origin
-  fi
- 
 }
 
 function podfileUpdate() {
@@ -299,7 +292,9 @@ function getModuledir() {
 #模块全上传后执行
 pushMaster="1"
 
-read -p "请输入项目根目录： " rootPath
+# read -p "请输入项目根目录： " rootPath
+
+rootPath='/Users/stephen/Documents/OriginGit'
 
 echo -e "${RED_COLOR}======   start...  =================${RESET}"
 
