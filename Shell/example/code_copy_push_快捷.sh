@@ -68,8 +68,8 @@ function checkoutAndNewBranch() {
       branchName='master'
     fi
 
-    git checkout . && git clean -xdf
-    git checkout $branchName
+    echo $pc_password | sudo -S git checkout . && git clean -xdf
+    echo $pc_password | sudo -S git checkout $branchName
     git branch -u origin/$branchName
     git fetch origin  $branchName
 
@@ -218,6 +218,7 @@ function push() {
 
 function copy() {
 
+  #1 根目录  2 模块
   new_dir=$1"/TuyaSmart_iOS/Pods/"$2"/"$2
 
   targer_dir=$1"/"$2
@@ -274,8 +275,8 @@ function copy() {
   fi
 
   echo "复制到：$targer_dir"
-  echo dswdsw | sudo -S rm -rf $old_targer_dir
-  echo dswdsw | sudo -S cp -R $new_dir $targer_dir
+  echo $pc_password | sudo -S rm -rf $old_targer_dir
+  echo $pc_password | sudo -S cp -R $new_dir $targer_dir
   echo -e "\n"
   #修改podfile文件
   podfileUpdate $1 $2
@@ -291,6 +292,9 @@ function getModuledir() {
 
 #模块全上传后执行
 pushMaster="1"
+
+#配置密码
+pc_password="dswdsw"
 
 # read -p "请输入项目根目录： " rootPath
 
