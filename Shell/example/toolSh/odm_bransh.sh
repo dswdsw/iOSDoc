@@ -12,7 +12,7 @@ doc=$1
 cd $doc
 
 
-result=$(git branch -r | grep '/ka/')
+result=$(git branch -r | grep '/odm/')
 
 echo -e "$result"
 
